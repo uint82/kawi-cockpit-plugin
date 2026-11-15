@@ -1,0 +1,16 @@
+[package]
+name = "kawi-cockpit-plugin"
+version = "0.1.0"
+edition = "2021"
+description = "Project dashboard and task runner for Kawi"
+license = "GPL-3.0-or-later"
+repository = "https://github.com/uint82/kawi-cockpit-plugin"
+rust-version = "1.98.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+kawi-plugin-sdk = "0.12.0"
+
+[workspace]
