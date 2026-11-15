@@ -1,0 +1,203 @@
+name = "cockpit"
+version = "0.1.0"
+protocol = 1
+runtime = "wasm"
+description = "Project dashboard, diagnostics, and background task runner"
+component = "cockpit.wasm"
+sha256 = "sha256:747bf0aa1ab247cc1bf7642cef11729a67ed98984f627f5b02cead90dbb372cc"
+timeout_ms = 10000
+subscribes = [
+    "buffer_changed",
+    "buffer_opened",
+    "buffer_closed",
+    "file_opened",
+    "file_saved",
+    "mode_changed",
+    "diagnostics_changed",
+]
+
+[debounce]
+buffer_changed = 250
+
+[capabilities]
+"editor.read" = true
+"editor.write" = true
+"editor.buffers" = true
+"editor.buffers.write" = { paths = ["$WORKSPACE"] }
+"editor.windows" = true
+"editor.control" = true
+"editor.execute" = { commands = ["file.save"] }
+"editor.commands" = true
+"editor.keymaps" = true
+"editor.autocmds" = true
+"editor.schedule" = true
+"editor.variables" = true
+"editor.decorations" = true
+"options.read" = true
+"options.write" = true
+"ui.message" = true
+"ui.prompt" = true
+"ui.progress" = true
+"ui.statusline" = true
+"ui.panel" = true
+"ui.overlay" = true
+"ui.picker" = true
+"diagnostics.read" = true
+"diagnostics.publish" = true
+"fs.read" = { paths = ["$WORKSPACE"] }
+"fs.write" = { paths = ["$WORKSPACE"] }
+"process.spawn" = { commands = ["cargo", "git", "cat"] }
+"net.connect" = { hosts = ["example.com:80"] }
+
+[[decorations]]
+id = "diag_error"
+color = "error"
+fill = "foreground"
+bold = true
+
+[[decorations]]
+id = "diag_warning"
+color = "warning"
+fill = "foreground"
+
+[[decorations]]
+id = "diag_information"
+color = "info"
+fill = "foreground"
+
+[[decorations]]
+id = "diag_hint"
+color = "muted"
+fill = "foreground"
+
+[settings.refresh_ms]
+type = "integer"
+default = 2000
+description = "How often the panel and background task update"
+minimum = 1000
+maximum = 60000
+
+[settings.panel_height]
+type = "integer"
+default = 12
+description = "Dashboard panel height in rows"
+minimum = 4
+maximum = 18
+
+[settings.max_buffers]
+type = "integer"
+default = 8
+description = "Buffers listed in the dashboard"
+minimum = 1
+maximum = 32
+
+[settings.max_diagnostics]
+type = "integer"
+default = 6
+description = "Diagnostics listed in the dashboard"
+minimum = 1
+maximum = 20
+
+[settings.show_statusline]
+type = "boolean"
+default = true
+description = "Show the cockpit summary in the status line"
+
+[[activation_events]]
+event = "on_startup"
+
+[[activation_events]]
+event = "on_command"
+
+[[commands]]
+id = "open"
+title = "Open the project cockpit"
+
+[commands.keybindings]
+normal = ["<leader>co"]
+
+[[commands]]
+id = "refresh"
+title = "Refresh the project cockpit"
+capabilities = ["editor.read"]
+
+[[commands]]
+id = "focus-panel"
+title = "Focus the project cockpit panel"
+capabilities = ["ui.panel"]
+
+[[commands]]
+id = "tasks"
+title = "Run a project task"
+capabilities = ["process.spawn"]
+
+[commands.keybindings]
+normal = ["<leader>ct"]
+
+[[commands]]
+id = "buffers"
+title = "Switch to an open buffer"
+capabilities = ["editor.buffers"]
+
+[[commands]]
+id = "windows"
+title = "Focus a window"
+capabilities = ["editor.windows"]
+
+[[commands]]
+id = "split"
+title = "Open the current buffer in a split"
+capabilities = ["editor.windows"]
+
+[[commands]]
+id = "close-window"
+title = "Close the current window"
+capabilities = ["editor.windows"]
+
+[[commands]]
+id = "mode"
+title = "Set the editor mode"
+capabilities = ["editor.control"]
+
+[[commands]]
+id = "next-diagnostic"
+title = "Jump to the next diagnostic"
+capabilities = ["editor.control"]
+
+[[commands]]
+id = "toggle-numbers"
+title = "Toggle line numbers"
+capabilities = ["options.write"]
+
+[[commands]]
+id = "save"
+title = "Save the current buffer"
+capabilities = ["editor.execute"]
+
+[[commands]]
+id = "note"
+title = "Append a project note"
+capabilities = ["editor.buffers.write", "editor.execute"]
+
+[[commands]]
+id = "insert-task"
+title = "Insert a task line at the cursor"
+capabilities = ["editor.write"]
+
+[[commands]]
+id = "report"
+title = "Write a cockpit report"
+capabilities = ["fs.write"]
+
+[commands.keybindings]
+normal = ["<leader>cR"]
+
+[[commands]]
+id = "log"
+title = "Show the task log"
+capabilities = ["process.spawn"]
+
+[[commands]]
+id = "stop"
+title = "Stop the running task"
+capabilities = ["process.spawn"]
