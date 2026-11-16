@@ -1,10 +1,10 @@
 name = "cockpit"
-version = "0.1.0"
+version = "0.1.1"
 protocol = 1
 runtime = "wasm"
 description = "Project dashboard, diagnostics, and background task runner"
 component = "cockpit.wasm"
-sha256 = "sha256:747bf0aa1ab247cc1bf7642cef11729a67ed98984f627f5b02cead90dbb372cc"
+sha256 = "sha256:529e8409ed6e2e8d75c08005a2593672834018d34c8f945e40660685b48a0f2d"
 timeout_ms = 10000
 subscribes = [
     "buffer_changed",
